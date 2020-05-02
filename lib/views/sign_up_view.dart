@@ -7,6 +7,11 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'dart:io';
 import 'package:device_info/device_info.dart';
+import 'package:travel_budget/models/user.dart';
+import 'navigation_view.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 // TODO move this to tone location
 final primaryColor = const Color(0xFF75A2EA);
@@ -14,6 +19,7 @@ final primaryColor = const Color(0xFF75A2EA);
 enum AuthFormType { signIn, signUp, reset, anonymous, convert }
 
 class SignUpView extends StatefulWidget {
+
   final AuthFormType authFormType;
 
   SignUpView({Key key, @required this.authFormType}) : super(key: key);
@@ -50,7 +56,14 @@ class _SignUpViewState extends State<SignUpView> {
   _SignUpViewState({this.authFormType});
 
   final formKey = GlobalKey<FormState>();
+
+  final newUser = new User(null, null, null, null,null,null,null,null,null,null);
+  TextEditingController _titleController1 = new TextEditingController();
+  TextEditingController _titleController2 = new TextEditingController();
+
+
   String _email, _password, _name, _warning;
+
 
   void switchFormState(String state) {
     formKey.currentState.reset();
@@ -82,18 +95,26 @@ class _SignUpViewState extends State<SignUpView> {
   }
 
   void submit() async {
+    newUser.name = _titleController1.text;
+    newUser.email= _titleController2.text;
+   //r String userId = (await FirebaseAuth.instance.currentUser()).uid;
     if (validate()) {
       try {
         final auth = Provider.of(context).auth;
         switch (authFormType) {
           case AuthFormType.signIn:
             await auth.signInWithEmailAndPassword(_email, _password);
-            Navigator.of(context).pushReplacementNamed('/home');
+            Navigator.of(context).pushReplacementNamed('/first');
             break;
           case AuthFormType.signUp:
-            await auth.createUserWithEmailAndPassword(
-                _email, _password, _name);
-            Navigator.of(context).pushReplacementNamed('/home');
+            await auth.createUserWithEmailAndPassword(newUser.email, _password, newUser.name);
+            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Home(user: newUser)),);
+            /*FirebaseAuth.instance.currentUser().then((currentUser) => Firestore.instance.collection('users').document(currentUser.uid).setData(
+                {'email': newUser.email, 'name': newUser.email}).then((onValue) {
+            }));*/
+           // Navigator.of(context).pushReplacementNamed('/home');
             break;
           case AuthFormType.reset:
             await auth.sendPasswordResetEmail(_email);
@@ -122,8 +143,16 @@ class _SignUpViewState extends State<SignUpView> {
 
   @override
   Widget build(BuildContext context) {
+
+
+    _titleController1.text = newUser.name;
+    _titleController2.text = newUser.email;
+
+
+
     final _width = MediaQuery.of(context).size.width;
     final _height = MediaQuery.of(context).size.height;
+
 
     if (authFormType == AuthFormType.anonymous) {
       submit();
@@ -241,6 +270,8 @@ class _SignUpViewState extends State<SignUpView> {
     if ([AuthFormType.signUp, AuthFormType.convert].contains(authFormType)) {
       textFields.add(
         TextFormField(
+          controller: _titleController1,
+          autofocus: true,
           validator: NameValidator.validate,
           style: TextStyle(fontSize: 22.0),
           decoration: buildSignUpInputDecoration("Name"),
@@ -253,6 +284,8 @@ class _SignUpViewState extends State<SignUpView> {
     // add email & password
     textFields.add(
       TextFormField(
+        controller: _titleController2,
+        autofocus: true,
         validator: EmailValidator.validate,
         style: TextStyle(fontSize: 22.0),
         decoration: buildSignUpInputDecoration("Email"),
@@ -286,7 +319,7 @@ class _SignUpViewState extends State<SignUpView> {
       enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white, width: 0.0)),
       contentPadding:
-          const EdgeInsets.only(left: 14.0, bottom: 10.0, top: 10.0),
+      const EdgeInsets.only(left: 14.0, bottom: 10.0, top: 10.0),
     );
   }
 
@@ -320,7 +353,7 @@ class _SignUpViewState extends State<SignUpView> {
         width: MediaQuery.of(context).size.width * 0.7,
         child: RaisedButton(
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
           color: Colors.white,
           textColor: primaryColor,
           child: Padding(

@@ -7,6 +7,7 @@ import 'package:travel_budget/widgets/provider_widget.dart';
 import 'package:travel_budget/services/auth_service.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:travel_budget/services/admob_service.dart';
+import 'package:travel_budget/models/user.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
         home: HomeController(),
         routes: <String, WidgetBuilder>{
           '/home': (BuildContext context) => HomeController(),
+          '/first': (BuildContext context) => FirstView(),
           '/signUp': (BuildContext context) => SignUpView(authFormType: AuthFormType.signUp),
           '/signIn': (BuildContext context) => SignUpView(authFormType: AuthFormType.signIn),
           '/anonymousSignIn': (BuildContext context) => SignUpView(authFormType: AuthFormType.anonymous),
@@ -44,13 +46,14 @@ class MyApp extends StatelessWidget {
 class HomeController extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final Users = new User(null, null, null, null, null,null,null,null,null,null);
     final AuthService auth = Provider.of(context).auth;
     return StreamBuilder<String>(
       stream: auth.onAuthStateChanged,
       builder: (context, AsyncSnapshot<String> snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
           final bool signedIn = snapshot.hasData;
-          return signedIn ? Home() : FirstView();
+          return signedIn ? Home(user:Users) : FirstView();
         }
         return CircularProgressIndicator();
       },
