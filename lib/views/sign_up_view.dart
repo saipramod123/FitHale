@@ -8,6 +8,7 @@ import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'dart:io';
 import 'package:device_info/device_info.dart';
 import 'package:travel_budget/models/user.dart';
+import 'letsgo.dart';
 import 'navigation_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -104,7 +105,9 @@ class _SignUpViewState extends State<SignUpView> {
         switch (authFormType) {
           case AuthFormType.signIn:
             await auth.signInWithEmailAndPassword(_email, _password);
-            Navigator.of(context).pushReplacementNamed('/first');
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MyApp1()),);
             break;
           case AuthFormType.signUp:
             await auth.createUserWithEmailAndPassword(newUser.email, _password, newUser.name);

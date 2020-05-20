@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'navigation_view3.dart';
 import 'package:travel_budget/models/user.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
 
 class Screen3 extends StatelessWidget {
   final User user;
@@ -12,8 +12,10 @@ class Screen3 extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
           appBar: AppBar(
-            title: Text("Flutter Multiple Checkbox Example"),
+            title: Text("FitHale"),
+            backgroundColor: Color(0xFF01579B),
           ),
+          backgroundColor: Color(0xffe1f5fe),
           body: SafeArea(
               child : Center(
                 child:CheckboxWidget(user:user),
@@ -68,9 +70,10 @@ class CheckboxWidgetState extends State<CheckboxWidget> {
     return Column (children: <Widget>[
 
       RaisedButton(
+
         child: Text("Tell us about your Health", style: TextStyle(fontSize: 18),),
         onPressed: getCheckboxItems,
-        color: Colors.blueAccent,
+        color: Color(0xFF01579B),
         textColor: Colors.white,
         splashColor: Colors.grey,
         padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
@@ -81,7 +84,7 @@ class CheckboxWidgetState extends State<CheckboxWidget> {
             return new CheckboxListTile(
               title: new Text(key),
               value: values[key],
-              activeColor: Colors.pink,
+              activeColor: Colors.amber,
               checkColor: Colors.white,
               onChanged: (bool value) {
                 setState(() {
@@ -100,6 +103,14 @@ class CheckboxWidgetState extends State<CheckboxWidget> {
                       controller: _titleController1,
                       autofocus: true,
                       decoration: const InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.amber,
+                            )
+                        ),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide()
+                        ),
                         hintText: 'Specify if any',
                         labelText: 'Others',
                       ),
@@ -107,6 +118,8 @@ class CheckboxWidgetState extends State<CheckboxWidget> {
                     new Container(
                         padding: const EdgeInsets.only(left: 40.0, top: 40.0),
                         child: new RaisedButton(
+                            color: Color(0xFF01579B),
+                            textColor: Colors.white,
                             child: const Text('Next'),
                             onPressed: ()async {
                               widget.user.ohealth=_titleController1.text;

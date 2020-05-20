@@ -1,10 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:travel_budget/pages.dart';
 import 'profile_view.dart';
 import 'navigation_view2.dart';
 import 'package:travel_budget/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
 
 
 class Home extends StatefulWidget {
@@ -18,6 +19,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   //int _currentIndex = 0;
+  int groupValue;
   int radioValue = -1;
   String _textResult = '';
   void _handleRadioValueChange1(int value){
@@ -64,7 +66,9 @@ class _HomeState extends State<Home> {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text('FitHale'),
+        backgroundColor: Color(0xFF01579B),
       ),
+      backgroundColor: Color(0xffe1f5fe),
       body: new SafeArea(
           child: new Form(
               key: _formKey,
@@ -93,7 +97,18 @@ class _HomeState extends State<Home> {
                     decoration: const InputDecoration(
                       hintText: 'Enter your Age ',
                       labelText: 'Age',
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.amber
+                          )
+                      ),
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide()
+                      ),
                     ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(5.0),
                   ),
                   new TextFormField(
                     controller: _titleController2,
@@ -101,7 +116,18 @@ class _HomeState extends State<Home> {
                     decoration: const InputDecoration(
                       hintText: 'Enter your height',
                       labelText: 'Height',
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.amber,
+                          )
+                      ),
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide()
+                      ),
                     ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(5.0),
                   ),
                   new TextFormField(
                     controller: _titleController3,
@@ -109,8 +135,17 @@ class _HomeState extends State<Home> {
                     decoration: const InputDecoration(
                       hintText: 'Enter your weight',
                       labelText: 'Weight',
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.amber,
+                          )
+                      ),
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide()
+                      ),
                     ),
                   ),
+
                   Padding(
                     padding: EdgeInsets.all(12.0),
                   ),
@@ -122,8 +157,9 @@ class _HomeState extends State<Home> {
                         ),
                         new Radio(
                           value: 0,
-                          groupValue: radioValue,
-                          onChanged: _handleRadioValueChange1,
+                          groupValue: groupValue,
+                          onChanged: (int e) => something(e),
+                          activeColor: Colors.amber,
                         ),
                         new Text(
                           'Male',
@@ -131,8 +167,9 @@ class _HomeState extends State<Home> {
                         ),
                         new Radio(
                           value: 1,
-                          groupValue: radioValue,
-                          onChanged: _handleRadioValueChange1,
+                          groupValue: groupValue,
+                          onChanged: (int e) => something(e),
+                          activeColor: Colors.amber,
                         ),
                         new Text(
                           'Female',
@@ -140,8 +177,9 @@ class _HomeState extends State<Home> {
                         ),
                         new Radio(
                           value: 2,
-                          groupValue: radioValue,
-                          onChanged: _handleRadioValueChange1,
+                          groupValue: groupValue,
+                          onChanged: (int e) => something(e),
+                          activeColor: Colors.amber,
                         ),
                         new Text(
                           'Other',
@@ -149,9 +187,14 @@ class _HomeState extends State<Home> {
                         ),
                       ]),
                   new Container(
+
                       padding: const EdgeInsets.only(left: 40.0, top: 40.0),
                       child: new RaisedButton(
+                          color: Color(0xFF01579B),
+                          textColor: Colors.white,
+
                           child: const Text('Next'),
+
                          onPressed: () async{
                            //String userId = (await FirebaseAuth.instance.currentUser()).uid;
                             widget.user.age = _titleController1.text;
@@ -169,14 +212,33 @@ class _HomeState extends State<Home> {
                             context,
                             MaterialPageRoute(builder: (context) => Screen3(user: widget.user)),
                            );
+
                           }
-                      )),
+
+                      )
+                  ),
 
                 ],
               )
           )
       ),
     );
+  }
+  void something(int e){
+    setState(() {
+      if(e == 0){
+        groupValue=0;
+      }
+      else if(e==1){
+        groupValue=1;
+      }
+      else if(e==2){
+        groupValue=2;
+      }
+      else if(e==3){
+        groupValue=3;
+      }
+    });
   }
 }
 
